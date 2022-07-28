@@ -34,19 +34,12 @@ export class ValueContainer {
   }
 
   #parse_value(input: string): [Value, ValueName] {
-    if (is_string(input)) {
-      console.log(input, 'is string');
-      return [input.slice(1, -1), 'string'];
-    }
+    if (is_string(input)) return [input.slice(1, -1), 'string'];
     if (is_array(input)) {
-      console.log(input, 'is arr');
+      console.log(input, 'is arr_string');
       return [JSON.parse(input), 'array_string'];
     }
-    if (is_number(input)) {
-      console.log(input, 'is number');
-      return [+input, 'number'];
-    }
-    console.log(input, 'is empty');
+    if (is_number(input)) return [+input, 'number'];
     return [undefined, 'undefined'];
   }
 }

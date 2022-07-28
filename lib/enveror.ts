@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import parser from './parser';
 import { ValueContainer } from './value_container';
 
@@ -7,10 +5,14 @@ export interface EnverorVars {
   [key: string]: ValueContainer | EnverorVars;
 }
 
+export interface EnverorProps {
+  routes?: string[];
+}
+
 export class Enveror {
   public vars: EnverorVars = {};
 
-  constructor(routes = [] as string[]) {
+  constructor({ routes = [] }: EnverorProps) {
     const default_env_path = process.cwd() + '/.enveror';
     if (!routes.includes(default_env_path)) {
       routes = [default_env_path, ...routes];
@@ -18,30 +20,16 @@ export class Enveror {
     routes.forEach((route) => this.#merge(route));
   }
 
-  #checkFileExist(route: string) {
-    const exist = fs.existsSync(route);
-    if (!exist) throw `env file ("${route}") not found`;
-  }
-
   #merge(route: string) {
-    this.#checkFileExist(route);
-    const file = fs.readFileSync(route).toString();
-    const parsed = parser.parseLines(file);
-    parsed.forEach(([key, val]) => {
-      this.#push(key, new ValueContainer(val));
-    });
+    const parsed = parser.parseFile(route);
+    parsed.forEach(([k, v]) => this.#push(k, new ValueContainer(v)));
   }
 
   #push(key: string, val: ValueContainer, target = this.vars) {
     if (key.includes('.')) {
-      const splitted = key.split('.');
-      const outer = splitted[0];
-      if (!target[outer]) target[outer] = {};
-      this.#push(
-        splitted.slice(1).join('.'),
-        val,
-        target[outer] as EnverorVars
-      );
+      const [first, ...others] = key.split('.');
+      if (!target[first]) target[first] = {};
+      this.#push(others.join('.'), val, target[first] as EnverorVars);
     } else {
       if (target[key]) throw `duplicate key "${key}"`;
       target[key] = val;
