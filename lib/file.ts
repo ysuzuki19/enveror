@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { env_not_found } from './exception_message';
 
-function parseLine({
+export function parseLine({
   line,
   delm = '=',
 }: {
@@ -14,16 +14,19 @@ function parseLine({
   return [key, val];
 }
 
-function parseLines(lines: string): [string, string][] {
-  return lines.split('\n').map((line) => parseLine({ line }));
+export function parseLines(lines: string): [string, string][] {
+  return lines
+    .split('\n')
+    .map((line) => parseLine({ line }))
+    .filter(([key]) => key);
 }
 
-function checkFileExist(route: string): boolean {
+export function checkExist(route: string): boolean {
   return fs.existsSync(route);
 }
 
 export function parse(route: string) {
-  if (!checkFileExist(route)) throw env_not_found(route);
+  if (!checkExist(route)) throw env_not_found(route);
   const file = fs.readFileSync(route).toString();
   const parsed = parseLines(file);
   return parsed;

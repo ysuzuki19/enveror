@@ -3,28 +3,22 @@ import {
   check_empty,
   check_number,
   check_string,
-} from './checker';
-
-type TestCase = [string, boolean]; // [input, result]
+} from '../checker';
+import { TestIOs } from '../__mock__';
 
 function checker_tester(
   callback_name: string,
   callback: (i: string) => boolean,
-  cases: TestCase[]
+  cases: TestIOs<string, boolean>
 ) {
-  describe(callback_name, () => {
-    for (let i = 0; i < cases.length; i += 1) {
-      test(`(${cases[i][0]}) => ${cases[i][1]}`, () => {
-        expect(callback(cases[i][0])).toBe(cases[i][1]);
-      });
-    }
+  cases.forEach((value) => {
+    test(`${callback_name}(${value.input}) => ${value.output}`, () => {
+      expect(callback(value.input)).toBe(value.output);
+    });
   });
 }
 
-const all_cases: {
-  input: string;
-  answer: string;
-}[] = [
+const cases: { input: string; answer: string }[] = [
   { input: ' ""', answer: '_' },
   { input: ' 40', answer: '_' },
   { input: '"" ', answer: '_' },
@@ -54,34 +48,38 @@ const all_cases: {
   { input: '{num:40}', answer: '_' },
 ];
 
-function create_specify_cases(expected: string): TestCase[] {
-  const cases: TestCase[] = [];
-  for (let i = 0; i < all_cases.length; i += 1) {
-    cases.push([all_cases[i].input, all_cases[i].answer === expected]);
-  }
-  return cases;
-}
-
 checker_tester(
-  'checker.check_string()',
+  'check_string()',
   check_string,
-  create_specify_cases('string')
+  cases.map((value) => ({
+    input: value.input,
+    output: value.answer === 'string',
+  }))
 );
 
 checker_tester(
-  'checker.check_number()',
+  'check_number()',
   check_number,
-  create_specify_cases('number')
+  cases.map((value) => ({
+    input: value.input,
+    output: value.answer === 'number',
+  }))
 );
 
 checker_tester(
-  'checker.check_array()',
+  'check_array()',
   check_array,
-  create_specify_cases('array')
+  cases.map((value) => ({
+    input: value.input,
+    output: value.answer === 'array',
+  }))
 );
 
 checker_tester(
-  'checker.check_empty()',
+  'check_empty()',
   check_empty,
-  create_specify_cases('empty')
+  cases.map((value) => ({
+    input: value.input,
+    output: value.answer === 'empty',
+  }))
 );

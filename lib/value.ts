@@ -37,6 +37,7 @@ export class Value {
   }
 
   public as_array_number(): number[] {
+    console.log(this.val, this.type_name);
     validator.validate_type(this.type_name, TypeNames.ARRAY_NUMBER);
     return this.val as number[];
   }

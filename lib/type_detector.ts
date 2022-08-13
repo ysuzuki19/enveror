@@ -23,6 +23,7 @@ export function detectTypeName(input: unknown): TypeName {
 }
 
 export function detectArrayTypeName(input: unknown[]): TypeName {
+  if (input.length === 0) throw unsupported_type(`empty Array`);
   const t = typeof input[0];
   return match<TypeName>(t, {
     [TypeNames.STRING]: () => TypeNames.ARRAY_STRING,
