@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/ysuzuki19/enveror#readme",
   "dependencies": {
+    "@ysuzuki19/match.ts": "^1.0.1",
     "obstractor": "^1.0.4"
   },
   "eslintConfig": {
