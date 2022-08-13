@@ -1,36 +1,15 @@
-import fs from 'fs';
+import { ValueType, TypeName, TypeNames } from './types';
+import { detectArrayTypeName } from './type_detector';
+import { check_array, check_number, check_string } from './checker';
 
-export function parseLine({
-  line,
-  delm = '=',
-}: {
-  line: string;
-  delm?: string;
-}): [string, string] {
-  const idx = line.indexOf(delm);
-  const key = line.slice(0, idx).trim();
-  const val = line.slice(idx + 1).trim();
-  return [key, val];
+export function parse_unknown_str(input: string): [ValueType, TypeName] {
+  if (check_string(input)) return [input.slice(1, -1), TypeNames.STRING];
+  if (check_number(input)) return [+input, TypeNames.NUMBER];
+  if (check_array(input)) {
+    const parsed = JSON.parse(input);
+    return [parsed, detectArrayTypeName(parsed)];
+  }
+  return [undefined, 'undefined'];
 }
 
-export function parseLines(lines: string): [string, string][] {
-  return lines.split('\n').map((line) => parseLine({ line }));
-}
-
-function checkFileExist(route: string) {
-  const exist = fs.existsSync(route);
-  if (!exist) throw `env file ("${route}") not found`;
-}
-
-export function parseFile(route: string) {
-  checkFileExist(route);
-  const file = fs.readFileSync(route).toString();
-  const parsed = parseLines(file);
-  return parsed;
-}
-
-export default {
-  parseLine,
-  parseLines,
-  parseFile,
-};
+export default { parse_unknown_str };

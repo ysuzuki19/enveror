@@ -1,46 +1,71 @@
-import parser from './parser';
-import { ValueContainer } from './value_container';
+import { Value } from './value';
+import * as path from 'path';
+import file from './file';
 
-export interface EnverorVars {
-  [key: string]: ValueContainer | EnverorVars;
-}
+const default_env_name = '.enveror';
 
-export interface EnverorProps {
+type EnverorLogger = (...data: unknown[]) => void;
+
+interface EnverorArgs {
   routes?: string[];
+  logger?: EnverorLogger;
+  disableDefault?: boolean;
 }
 
 export class Enveror {
-  public vars: EnverorVars = {};
+  vals: Record<string, Value> = {};
+  private logger;
 
-  constructor({ routes = [] }: EnverorProps) {
-    const default_env_path = process.cwd() + '/.enveror';
-    if (!routes.includes(default_env_path)) {
-      routes = [default_env_path, ...routes];
+  constructor({
+    routes = [],
+    logger = console.log,
+    disableDefault = false,
+  }: EnverorArgs) {
+    this.logger = logger;
+    if (!disableDefault) {
+      const default_env_path = path.join(process.cwd(), default_env_name);
+      if (!routes.includes(default_env_path)) {
+        routes = [default_env_path, ...routes];
+      }
     }
     routes.forEach((route) => this.#merge(route));
   }
 
-  #merge(route: string) {
-    const parsed = parser.parseFile(route);
-    parsed.forEach(([k, v]) => this.#push(k, new ValueContainer(v)));
+  valueOf(key: string) {
+    console.log(key);
+    return this.vals[key];
   }
 
-  #push(key: string, val: ValueContainer, target = this.vars) {
+  public get(key: string) {
+    console.log(key);
+    return this.vals[key];
+  }
+
+  public keys(): string[] {
+    return Object.keys(this.vals);
+  }
+
+  #merge(route: string) {
+    const parsed = file.parse(route);
+    parsed.forEach(([k, v]) => this.#push(k, new Value(v)));
+  }
+
+  #push(key: string, val: Value) {
     if (key.includes('.')) {
       const [first, ...others] = key.split('.');
-      if (!target[first]) target[first] = {};
-      this.#push(others.join('.'), val, target[first] as EnverorVars);
+      if (!this.vals[first]) this.vals[first] = new Value();
+      this.vals[first].push(others.join('.'), val);
     } else {
-      if (target[key]) throw `duplicate key "${key}"`;
-      target[key] = val;
+      if (this.vals[key]) throw `duplicate key "${key}"`;
+      this.vals[key] = val;
     }
   }
 
   public stringify() {
-    return JSON.stringify(this.vars);
+    return JSON.stringify(this.vals);
   }
 
   public to_string() {
-    return JSON.parse(JSON.stringify(this.vars));
+    return JSON.parse(JSON.stringify(this.vals));
   }
 }
