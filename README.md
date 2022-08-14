@@ -1,5 +1,7 @@
 # enveror
 
+[![npm](https://img.shields.io/npm/v/enveror?label=enveror)](https://www.npmjs.com/package/enveror)
+
 ```
 This library under alpha version now.
 ```
