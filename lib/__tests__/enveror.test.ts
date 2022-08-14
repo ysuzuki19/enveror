@@ -9,7 +9,7 @@ const defautEnverorObj = {
     API_SECRET_KEY: 'fug+;l[l;uw:er\\-0-63-096z,nxvcafuga',
     STORAGE: { IMAGES: 'myimages' },
   },
-  API: { CORS_ORIGIN: ['http://localhost:3000'] },
+  CORS_ORIGINS: ['http://localhost:3000'],
   WORKER_COUNT: 4,
   TIMEOUT_SECONDS: 2.3,
   EMPTY_STRING: ' ',

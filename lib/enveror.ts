@@ -4,24 +4,24 @@ import file from './file';
 
 const default_env_name = '.enveror';
 
-type EnverorLogger = (...data: unknown[]) => void;
+// type EnverorLogger = (...data: unknown[]) => void;
 
 interface EnverorArgs {
   routes?: string[];
-  logger?: EnverorLogger;
+  // logger?: EnverorLogger;
   disableDefault?: boolean;
 }
 
 export class Enveror {
   private readonly val = new Value();
-  private readonly logger;
+  // private readonly logger;
 
   constructor({
     routes = [],
-    logger = () => null,
+    // logger = () => null,
     disableDefault = false,
   }: EnverorArgs) {
-    this.logger = logger;
+    // this.logger = logger;
     if (!disableDefault) {
       const default_env_path = path.join(process.cwd(), default_env_name);
       if (!routes.includes(default_env_path)) {
