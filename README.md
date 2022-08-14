@@ -1,6 +1,14 @@
 # enveror
 
+```
+This library under alpha version now.
+```
+
 environment variables managing library for TypeScript (or JavaScript).
+
+```typescript
+$ npm i enveror
+```
 
 # feature
 
