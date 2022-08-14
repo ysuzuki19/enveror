@@ -52,7 +52,6 @@ CLOUD.STORAGE.IMAGES = "myimages"
 API.CORS_ORIGIN =["http://localhost:3000"]
 WORKER_COUNT =4
 TIMEOUT_SECONDS= 2.3
-EMPTY=
 EMPTY_STRING=" "`;
 
 const enveror_sample_lf = `
@@ -63,7 +62,6 @@ CLOUD.STORAGE.IMAGES = "myimages"
 API.CORS_ORIGIN =["http://localhost:3000"]
 WORKER_COUNT =4
 TIMEOUT_SECONDS= 2.3
-EMPTY=
 EMPTY_STRING=" "
 `;
 
@@ -75,7 +73,6 @@ const enveror_sample_out = [
   ['API.CORS_ORIGIN', '["http://localhost:3000"]'],
   ['WORKER_COUNT', '4'],
   ['TIMEOUT_SECONDS', '2.3'],
-  ['EMPTY', ''],
   ['EMPTY_STRING', '" "'],
 ];
 

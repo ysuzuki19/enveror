@@ -3,7 +3,7 @@ import dts from 'rollup-plugin-dts';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 
-const entry = './index.ts';
+const entry = './lib/index.ts';
 
 const es_config = {
   input: entry,

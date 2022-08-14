@@ -1,9 +1,4 @@
-import {
-  check_array,
-  check_empty,
-  check_number,
-  check_string,
-} from '../checker';
+import { check_array, check_number, check_string } from '../checker';
 import { TestIOs } from '../__mock__';
 
 function checker_tester(
@@ -72,14 +67,5 @@ checker_tester(
   cases.map((value) => ({
     input: value.input,
     output: value.answer === 'array',
-  }))
-);
-
-checker_tester(
-  'check_empty()',
-  check_empty,
-  cases.map((value) => ({
-    input: value.input,
-    output: value.answer === 'empty',
   }))
 );

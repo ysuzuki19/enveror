@@ -1,6 +1,7 @@
 import { ValueType, TypeName, TypeNames } from './types';
 import { detectArrayTypeName } from './type_detector';
 import { check_array, check_number, check_string } from './checker';
+import { unsupported_type } from './exception_message';
 
 export function parse_unknown_str(input: string): [ValueType, TypeName] {
   if (check_string(input)) return [input.slice(1, -1), TypeNames.STRING];
@@ -9,7 +10,7 @@ export function parse_unknown_str(input: string): [ValueType, TypeName] {
     const parsed = JSON.parse(input);
     return [parsed, detectArrayTypeName(parsed)];
   }
-  return [undefined, 'undefined'];
+  throw unsupported_type(input);
 }
 
 export default { parse_unknown_str };

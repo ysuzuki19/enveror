@@ -14,9 +14,4 @@ export function check_array(input: string): boolean {
   return arrRegexp.test(input);
 }
 
-const emptyRegexp = /^$/;
-export function check_empty(input: string): boolean {
-  return emptyRegexp.test(input);
-}
-
-export default { check_string, check_number, check_array, check_empty };
+export default { check_string, check_number, check_array };

@@ -13,12 +13,12 @@ interface EnverorArgs {
 }
 
 export class Enveror {
-  vals: Record<string, Value> = {};
-  private logger;
+  private readonly val = new Value();
+  private readonly logger;
 
   constructor({
     routes = [],
-    logger = console.log,
+    logger = () => null,
     disableDefault = false,
   }: EnverorArgs) {
     this.logger = logger;
@@ -31,41 +31,24 @@ export class Enveror {
     routes.forEach((route) => this.#merge(route));
   }
 
-  valueOf(key: string) {
-    console.log(key);
-    return this.vals[key];
-  }
-
   public get(key: string) {
-    console.log(key);
-    return this.vals[key];
+    return this.val.get(key);
   }
 
   public keys(): string[] {
-    return Object.keys(this.vals);
+    return this.val.keys();
+  }
+
+  public to_object() {
+    return this.val.to_object();
+  }
+
+  public to_string() {
+    return JSON.stringify(this.to_object());
   }
 
   #merge(route: string) {
     const parsed = file.parse(route);
-    parsed.forEach(([k, v]) => this.#push(k, new Value(v)));
-  }
-
-  #push(key: string, val: Value) {
-    if (key.includes('.')) {
-      const [first, ...others] = key.split('.');
-      if (!this.vals[first]) this.vals[first] = new Value();
-      this.vals[first].push(others.join('.'), val);
-    } else {
-      if (this.vals[key]) throw `duplicate key "${key}"`;
-      this.vals[key] = val;
-    }
-  }
-
-  public stringify() {
-    return JSON.stringify(this.vals);
-  }
-
-  public to_string() {
-    return JSON.parse(JSON.stringify(this.vals));
+    parsed.forEach(([k, v]) => this.val.insert(k, new Value(v)));
   }
 }

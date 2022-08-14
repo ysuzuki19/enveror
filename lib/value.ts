@@ -3,13 +3,13 @@ import { ValueType, TypeName, TypeNames } from './types';
 import validator from './type_validator';
 
 export class Value {
-  val: ValueType | undefined;
-  type_name: TypeName;
-  children: Record<string, Value> = {};
+  private readonly val: ValueType | undefined;
+  private readonly type_name: TypeName;
+  private readonly children: Record<string, Value> = {};
 
-  constructor(val_?: string | undefined) {
-    if (val_) {
-      const [val, type_name] = parse_unknown_str(val_);
+  constructor(raw_str_val?: string | undefined) {
+    if (raw_str_val) {
+      const [val, type_name] = parse_unknown_str(raw_str_val);
       this.val = val;
       this.type_name = type_name;
     } else {
@@ -41,19 +41,56 @@ export class Value {
     return this.val as number[];
   }
 
-  public child(key: string): Value {
-    validator.validate_type(this.type_name, TypeNames.OBJECT);
-    return this.children[key];
+  public get(key: string): Value {
+    if (this.#key_is_nested(key)) {
+      const [first, next] = this.#parse_keypath(key);
+      return this.children[first].get(next);
+    } else {
+      return this.#child(key);
+    }
   }
 
-  public push(key: string, val: Value) {
-    if (key.includes('.')) {
-      const [first, ...others] = key.split('.');
-      if (!this.children[first]) this.children[first] = new Value();
-      this.children[first].push(others.join('.'), val);
+  public keys(): string[] {
+    return Object.keys(this.children);
+  }
+
+  public to_object(): object | ValueType {
+    if (this.type_name === TypeNames.OBJECT) {
+      return Object.entries(this.children)
+        .map(([k, v]) => ({
+          [k]: v.val || v.to_object(),
+        }))
+        .reduce((p, c) => ({ ...p, ...c }), {});
     } else {
-      if (this.children[key]) throw `duplicate key "${key}"`;
+      return this.val;
+    }
+  }
+
+  public insert(key: string, val: Value) {
+    if (this.#key_is_nested(key)) {
+      const [first, next] = this.#parse_keypath(key);
+      if (!this.#exist(first)) this.children[first] = new Value();
+      this.children[first].insert(next, val);
+    } else {
+      if (this.#exist(key)) throw `duplicate key "${key}"`;
       this.children[key] = val;
     }
+  }
+
+  #key_is_nested(key: string): boolean {
+    return key.includes('.');
+  }
+
+  #exist(key: string): boolean {
+    return !!this.children[key];
+  }
+
+  #child(key: string): Value {
+    return this.children[key] || new Value();
+  }
+
+  #parse_keypath(key: string): [string, string] {
+    const [first, ...others] = key.split('.');
+    return [first, others.join('.')];
   }
 }

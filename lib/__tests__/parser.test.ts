@@ -5,7 +5,6 @@ import { TestIOs } from '../__mock__';
 describe('parse_unknown_str()', () => {
   (
     [
-      { input: '', output: [undefined, TypeNames.UNDEFINED] },
       { input: '""', output: ['', TypeNames.STRING] },
       { input: '"hoge"', output: ['hoge', TypeNames.STRING] },
       { input: '4', output: [4, TypeNames.NUMBER] },
