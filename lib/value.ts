@@ -42,11 +42,11 @@ export class Value {
   }
 
   public get(key: string): Value {
-    if (this.#key_is_nested(key)) {
-      const [first, next] = this.#parse_keypath(key);
+    if (ValueHelper.key_is_nested(key)) {
+      const [first, next] = ValueHelper.parse_keypath(key);
       return this.children[first].get(next);
     } else {
-      return this.#child(key);
+      return this.children[key] || new Value();
     }
   }
 
@@ -67,29 +67,26 @@ export class Value {
   }
 
   public insert(key: string, val: Value) {
-    if (this.#key_is_nested(key)) {
-      const [first, next] = this.#parse_keypath(key);
-      if (!this.#exist(first)) this.children[first] = new Value();
+    if (ValueHelper.key_is_nested(key)) {
+      const [first, next] = ValueHelper.parse_keypath(key);
+      if (!this.exist(first)) this.children[first] = new Value();
       this.children[first].insert(next, val);
     } else {
-      if (this.#exist(key)) throw `duplicate key "${key}"`;
+      if (this.exist(key)) throw `duplicate key "${key}"`;
       this.children[key] = val;
     }
   }
 
-  #key_is_nested(key: string): boolean {
-    return key.includes('.');
-  }
-
-  #exist(key: string): boolean {
+  private exist(key: string): boolean {
     return !!this.children[key];
   }
+}
 
-  #child(key: string): Value {
-    return this.children[key] || new Value();
+class ValueHelper {
+  public static key_is_nested(key: string): boolean {
+    return key.includes('.');
   }
-
-  #parse_keypath(key: string): [string, string] {
+  public static parse_keypath(key: string): [string, string] {
     const [first, ...others] = key.split('.');
     return [first, others.join('.')];
   }

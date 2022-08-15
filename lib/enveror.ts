@@ -28,7 +28,9 @@ export class Enveror {
         routes = [default_env_path, ...routes];
       }
     }
-    routes.forEach((route) => this.#merge(route));
+    routes.forEach((route) => {
+      file.parse(route).forEach(([k, v]) => this.val.insert(k, new Value(v)));
+    });
   }
 
   public get(key: string) {
@@ -45,10 +47,5 @@ export class Enveror {
 
   public to_string() {
     return JSON.stringify(this.to_object());
-  }
-
-  #merge(route: string) {
-    const parsed = file.parse(route);
-    parsed.forEach(([k, v]) => this.val.insert(k, new Value(v)));
   }
 }
