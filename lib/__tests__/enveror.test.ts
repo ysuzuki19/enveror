@@ -21,7 +21,13 @@ const localEnverorObj = {
 };
 
 describe('enveror', () => {
-  test('default', () => {
+  test('default without options', () => {
+    const enveror = new Enveror();
+    expect(enveror.get('STAGE').as_string()).toBe('dev');
+    expect(enveror.to_object()).toEqual(defautEnverorObj);
+  });
+
+  test('default with empty object input', () => {
     const enveror = new Enveror({});
     expect(enveror.get('STAGE').as_string()).toBe('dev');
     expect(enveror.to_object()).toEqual(defautEnverorObj);
