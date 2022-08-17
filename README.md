@@ -30,7 +30,7 @@ CLOUD.API_KEY_ID = "hogehoge=hog"
 ```ts
 import { Enveror } from 'enveror';
 
-const enveror = new Enveror({});
+const enveror = new Enveror();
 const stage = enveror.get('STAGE').as_string();
 console.log(stage);
 
@@ -93,6 +93,8 @@ in additional, string in nested object is accessable by `.get("X").get("Y").as_s
 # API
 
 ## Constructor
+
+You can pass options into `Enveror()`.
 
 ```typescript
 new Enveror({
