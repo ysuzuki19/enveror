@@ -15,8 +15,9 @@ $ npm i enveror
 # feature
 
 - easy to validate type
-- easy to define nested environment variables
-- easy to use array for environment variables
+- easy to use some type as env val(`string`/`number`/`boolean`/`string[]`/`number[]`/`object`)
+- easy to define nested env var
+- easy to use array for env var
 
 # how to use
 
@@ -54,6 +55,7 @@ CORS_ORIGINS =["http://localhost:3000"]
 WORKER_COUNT =4
 TIMEOUT_SECONDS= 2.3
 EMPTY_STRING=" "
+SAMPLE = true
 ```
 
 above file is interpretted as following object
@@ -69,7 +71,8 @@ above file is interpretted as following object
   "API": { "CORS_ORIGIN": ["http://localhost:3000"] },
   "WORKER_COUNT": 4,
   "TIMEOUT_SECONDS": 2.3,
-  "EMPTY_STRING": " "
+  "EMPTY_STRING": " ",
+  "SAMPLE": true
 }
 ```
 
@@ -85,6 +88,7 @@ above file is interpretted as following object
 | ---------- | ----------------- |
 | `string`   | as_string()       |
 | `number`   | as_number()       |
+| `boolean`  | as_boolean()      |
 | `string[]` | as_array_string() |
 | `number[]` | as_array_number() |
 
@@ -105,12 +109,12 @@ new Enveror({
 
 ## Methods
 
-| method                  | args                    | return           |
-| ----------------------- | ----------------------- | ---------------- |
-| `get(key:string):Value` | `key` is key of env var | `Value` of `key` |
-| `keys():string[]`       |                         | keys in 1-depth  |
-| `to_object():object`    |                         | loaded object    |
-| `to_string():string`    |                         |                  |
+| method                  | args                    | return                    |
+| ----------------------- | ----------------------- | ------------------------- |
+| `get(key:string):Value` | `key` is key of env var | `Value` of `key`          |
+| `keys():string[]`       |                         | keys in 1-depth           |
+| `to_object():object`    |                         | loaded object             |
+| `to_string():string`    |                         | stringified loaded object |
 
 ## Value Methods
 
@@ -123,6 +127,7 @@ it has type-assertion and children getter.
 | `as_any(): ValueType`         |                       | get var without assertion |
 | `as_string(): string`         |                       | assertion for `string`    |
 | `as_number(): number`         |                       | assertion for `number`    |
+| `as_boolean(): boolean`       |                       | assertion for `boolean`   |
 | `as_array_string(): string[]` |                       | assertion for `string[]`  |
 | `as_array_number(): number[]` |                       | assertion for `number[]`  |
 | `get(key: string): Value`     | `key` is key of child | child `Value` of `key`    |
@@ -136,6 +141,7 @@ it has type-assertion and children getter.
 /^"._"$/           => "string"
 /^[0-9]+$/         => "number"
 /^[0-9]+.[0-9]+$/  => "number"
+/^(true|false)$/   => "boolean"
 /^\[._\]$/         => "array"
 not matched        => Error
 ```

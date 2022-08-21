@@ -13,11 +13,13 @@ const defautEnverorObj = {
   WORKER_COUNT: 4,
   TIMEOUT_SECONDS: 2.3,
   EMPTY_STRING: ' ',
+  SAMPLE: true,
 };
 
 const local_env_path = path.join(process.cwd(), '/.enveror.local');
 const localEnverorObj = {
   DEVELOPER: { NAME: 'ysuzuki19' },
+  DEFAULT: false,
 };
 
 describe('enveror', () => {

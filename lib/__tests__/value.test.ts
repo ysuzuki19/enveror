@@ -58,6 +58,18 @@ describe('object mode', () => {
     root.insert(num_3_key, new Value('3'));
     expect(root.get(num_3_key).as_number()).toBe(3);
 
+    const bool_true = 'BOOL_TRUE';
+    root.insert(bool_true, new Value('true'));
+    expect(root.get(bool_true).as_boolean()).toBe(true);
+
+    const bool_false = 'BOOL_FALSE';
+    root.insert(bool_false, new Value('false'));
+    expect(root.get(bool_false).as_boolean()).toBe(false);
+
+    const fake_bool = 'FAKE_BOOL';
+    root.insert(fake_bool, new Value('"true"'));
+    expect(root.get(fake_bool).as_string()).toBe('true');
+
     const arr_str_key = 'ARR_HOGE_FUGA';
     root.insert(arr_str_key, new Value('["hoge","fuga"]'));
     expect(root.get(arr_str_key).as_array_string()).toEqual(['hoge', 'fuga']);

@@ -1,4 +1,4 @@
-import { Enveror } from './lib/enveror';
+import { Enveror } from './lib';
 
 const enveror = new Enveror({ routes: ['./.enveror.local'] });
 const stage = enveror.get('STAGE').as_string();

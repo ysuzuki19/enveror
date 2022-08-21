@@ -31,6 +31,11 @@ export class Value {
     return this.val as number;
   }
 
+  public as_boolean(): boolean {
+    validator.validate_type(this.type_name, TypeNames.BOOLEAN);
+    return this.val as boolean;
+  }
+
   public as_array_string(): string[] {
     validator.validate_type(this.type_name, TypeNames.ARRAY_STRING);
     return this.val as string[];

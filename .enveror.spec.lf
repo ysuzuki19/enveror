@@ -6,3 +6,4 @@ CORS_ORIGINS =["http://localhost:3000"]
 WORKER_COUNT =4
 TIMEOUT_SECONDS= 2.3
 EMPTY_STRING=" "
+SAMPLE = true
