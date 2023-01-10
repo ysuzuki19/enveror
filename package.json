@@ -1,6 +1,6 @@
 {
   "name": "enveror",
-  "version": "0.0.0-alpha.4",
+  "version": "0.0.0-alpha.5",
   "description": "environment variables managing library for TypeScript (or JS)",
   "main": "./dist/index.umd.min.js",
   "module": "./dist/index.es.js",
